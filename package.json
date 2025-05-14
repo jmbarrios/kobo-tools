@@ -1,0 +1,33 @@
+{
+  "name": "kobo-tools",
+  "version": "1.0.0",
+  "description": "Set of tools to get data from KoBo api and download media from a KoBo server.",
+  "main": "kobo-imgs-fs-updater.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./kobo-imgs-fs-updater.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/framirez07/kobo-tools.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/framirez07/kobo-tools/issues"
+  },
+  "homepage": "https://github.com/framirez07/kobo-tools#readme",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "canvas": ">=2.6.1",
+    "colors": "^1.4.0",
+    "commander": "^2.20.3",
+    "csv": "^5.3.2",
+    "fs-extra": "^9.0.1",
+    "node-jq": "^1.11.3",
+    "path": "^0.12.7",
+    "progress": "^2.0.3",
+    "sjcl": "^1.0.8"
+  }
+}
