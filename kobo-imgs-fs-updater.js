@@ -4,7 +4,7 @@ import * as Utils from './modules/utils.js';
 import * as Configs from './modules/configs.js'
 import { check, confirm, isOfType } from './modules/checks.js';
 import { ImageCleaner } from './modules/image-cleaner.js';
-import program from 'commander';
+import { program } from 'commander';
 import colors from 'colors/safe.js';
 import { dirname, resolve, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -31,9 +31,11 @@ program
   .option('--max-request-retries <MAX_REQUEST_RETRIES>', 'Max request retries before cancel the process.')
   .option('--max-download-retries <MAX_DOWNLOAD_RETRIES>', 'Max download retries before cancel the process.')
   .option('--request-timeout <REQUEST_TIMEOUT>', 'Request timeout before trying again.')
-  .option('--connection-timeout <CONETION_TIMEOUT>', 'Connection timeout before trying again.')
+  .option('--connection-timeout <CONNECTION_TIMEOUT>', 'Connection timeout before trying again.')
   .option('--download-timeout <DOWNLOAD_TIMEOUT>', 'Download timeout before trying again.');
-program.parse(process.argv);
+program.parse();
+
+const options = program.opts();
 
 /**
  * init & start
@@ -43,7 +45,7 @@ try {
   /**
    * Init configs and setup the output dirs tree
    */
-  _configs = Configs.init(program, __dirname);
+  _configs = Configs.init(options, __dirname);
   //internal
   check(_configs, 'mustExists', 'object');
   
@@ -328,7 +330,7 @@ async function getImageFields(stepId, input) {
   //write result
   let step_log_file = join(step_log_path,`${stepId}-result.json`);
   Utils.writeFile(step_log_file, JSON.stringify(results, null, 2), {async:false});
-  
+ 
   if(status) return results;
   else throw new Error('step completed with failed operations');
 }

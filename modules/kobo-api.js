@@ -586,7 +586,7 @@ export async function download(url, options) {
   check(options.runLogPath, 'mustExists', 'string');
 
   //endpoint
-  let next = `${options.mediaServerUrl}/${url}`;
+  let next = `${url}`;
 
   //init
   let result = null;

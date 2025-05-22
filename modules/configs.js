@@ -11,7 +11,7 @@ import { check, confirm, isOfType } from './checks.js';
 import * as Utils from './utils.js';
 import fs from 'fs-extra';
 import { resolve, join, parse } from 'path';
-import csvParseSync from 'csv-parse/lib/sync.js';
+import { parse as csvParseSync } from 'csv-parse/sync';
 import colors from 'colors/safe.js';
 
 /**
@@ -215,8 +215,8 @@ export function getConfigs(program, mainDir) {
    * - either filters or token should be specified.
    * - only one of filters or token should be specified.
    */
-  if(!configs.filters.length && !configs.token) throw new Error(`either 'filters' or 'token' should be properly configured`);
-  if(configs.filters.length && configs.token) throw new Error(`only one of 'filters' or 'token' should be configured`);
+  if(!configs.filters && !configs.token) throw new Error(`either 'filters' or 'token' should be properly configured`);
+  // if(configs.filters.length && configs.token) throw new Error(`only one of 'filters' or 'token' should be configured`);
 
   //set mode
   if(configs.filters.length) configs.mode = 'filters';
