@@ -3,7 +3,7 @@ import { resolve, join } from 'path';
 import fs from 'fs-extra';
 import nodejq  from 'node-jq';
 import colors from 'colors/safe.js';
-import sjcl from 'sjcl';
+import * as crypto from 'crypto';
 import Canvas from 'canvas';
 
 /**
@@ -622,14 +622,14 @@ export function getActionReportLine(submissionId, c_s, t_s, action, c_a, t_a, c_
 }
 
 /**
- * getHash  calculates a hash from the fiven data.
- * @param {string} data data to be hashed.
+ * getHash  calculates a hash from the given data.
+ * @param {buffer} data buffer to be hashed.
  */
 export function getHash(data) {
   //internal
-  check(data, 'mustExists', 'string');
+  check(data, 'mustExists', 'buffer');
   try {
-    return sjcl.hash.sha256.hash(data);
+    return crypto.createHash('sha256').update(data).digest('hex');
   } catch (error) {
     throw new Error(`getHash operation failed:` + e.message);
   }
@@ -659,14 +659,14 @@ export function getFileHash(file) {
 
   //read
   try {
-    data = fs.readFileSync(_file, 'utf8');
+    data = fs.readFileSync(_file);
   } catch (e) {
     throw new Error(`getFileHash operation failed: read failed: ${_file} - ` + e.message);
   }
 
   //hash
   try {
-    return sjcl.hash.sha256.hash(data);
+    return crypto.createHash('sha256').update(data).digest('hex');
   } catch (e) {
     throw new Error(`getFileHash operation failed: hash failed - ` + e.message);
   }
@@ -676,27 +676,23 @@ export function getFileHash(file) {
  * isValidHash  calculates data's hash and compares it
  * vs the given hash. Hashes needs to be equal to be
  * valid.
- * @param {string} data data to be hashed. 
- * @param {*} hash hash to be validated.
+ * @param {buffer} data data to be hashed. 
+ * @param {string} hash hash to be validated.
  */
 export function isValidHash(data, hash) {
   //internal
-  check(data, 'mustExists', 'string');
-  check(hash, 'mustExists', 'array');
+  check(data, 'mustExists', 'buffer');
+  check(hash, 'mustExists', 'string');
   
   try {
     //get data hash
-    let _hash = sjcl.hash.sha256.hash(data)
+    let _hash = crypto.createHash('sha256').update(data).digest('hex');
     //internal
-    check(_hash, 'mustExists', 'array');
+    check(_hash, 'mustExists', 'string');
 
     //check
-    if(_hash.length !== hash.length) return false;
+    if(_hash !== hash) return false;
     
-    //check
-    for(let i=0; i<hash.length; i++) {
-      if(_hash[i] !== hash[i]) return false;
-    }
     return true;
   } catch (e) {
     throw new Error(`isValidHash operation failed: ` + e.message);
@@ -714,21 +710,17 @@ export function isValidHash(data, hash) {
 export function isValidFileHash(file, hash) {
   //internal
   check(file, 'mustExists', 'string');
-  check(hash, 'mustExists', 'array');
+  check(hash, 'mustExists', 'string');
 
   try {
     //get file hash
     let _hash = getFileHash(file);
     //internal
-    check(_hash, 'mustExists', 'array');
+    check(_hash, 'mustExists', 'string');
 
     //check
-    if(_hash.length !== hash.length) return false;
-    
-    //check
-    for(let i=0; i<hash.length; i++) {
-      if(_hash[i] !== hash[i]) return false;
-    }
+    if(_hash !== hash) return false;
+
     return true;
   } catch (e) {
     throw new Error(`isValidFileHash operation failed: ` + e.message);
@@ -775,14 +767,14 @@ export async function getImgInfo(file) {
 
   //read
   try {
-    data = fs.readFileSync(_file, 'utf8');
+    data = fs.readFileSync(_file);
   } catch (e) {
     throw new Error(`getImgInfo operation failed: read failed: ${_file} - ` + e.message);
   }
 
   //hash
   try {
-    imgInfo.hash = sjcl.hash.sha256.hash(data);
+    imgInfo.hash = crypto.createHash('sha256').update(data).digest('hex');
   } catch (e) {
     throw new Error(`getImgInfo operation failed: hash failed - ` + e.message);
   }
@@ -849,7 +841,7 @@ export function isValidAttachmentMap(attachmentMap) {
     && confirm(attachmentMap.imgInfo.dimensions, 'exists') && isOfType(attachmentMap.imgInfo.dimensions, 'string')
     && confirm(attachmentMap.imgInfo.width, 'defined') && isOfType(attachmentMap.imgInfo.width, 'number')
     && confirm(attachmentMap.imgInfo.height, 'defined') && isOfType(attachmentMap.imgInfo.height, 'number')
-    && confirm(attachmentMap.imgInfo.hash, 'exists') && isOfType(attachmentMap.imgInfo.hash, 'array'));
+    && confirm(attachmentMap.imgInfo.hash, 'exists') && isOfType(attachmentMap.imgInfo.hash, 'string'));
 }
 
 /**

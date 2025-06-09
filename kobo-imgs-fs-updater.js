@@ -969,7 +969,7 @@ async function updateImages(stepId, input) {
              *    "attachmentId":2395,
              *    "saveTimestamp":"2020-11-17-19-41-36",
              *    "imgInfo":{
-             *    "hash":[-240650581,1759009758,-738380866,-1252016960,-1117734626,-2098850447,-1669759583,1939428331],
+             *    "hash": 2020c57d19f67b3ec95fa4626627c00bc5301fb0294dd4a5346ec9aec241bff7
              *    "width":2976,
              *    "height":3968,
              *    "dimensions":"width: 2976 pixels, height: 3968 pixels",
@@ -1068,7 +1068,7 @@ async function updateImages(stepId, input) {
               //prepare image info 
               let imgInfo = current_attachment_map_o.imgInfo;
               //append image info
-              Utils.appendFile(e_images_info_file_path, `${imgInfo.assetUid},${Utils.getCsvString(imgInfo.assetName)},${imgInfo.recordId},${Utils.getCsvString(imgInfo.name)},${imgInfo.size},${Utils.getCsvString(imgInfo.sizeMB)},${Utils.getCsvString(imgInfo.type)},${Utils.getCsvString(imgInfo.dimensions)},${imgInfo.width},${imgInfo.height}, ${Utils.getCsvString(JSON.stringify(imgInfo.hash))}`, {onNewLine: true});
+              Utils.appendFile(e_images_info_file_path, `${imgInfo.assetUid},${Utils.getCsvString(imgInfo.assetName)},${imgInfo.recordId},${Utils.getCsvString(imgInfo.name)},${imgInfo.size},${Utils.getCsvString(imgInfo.sizeMB)},${Utils.getCsvString(imgInfo.type)},${Utils.getCsvString(imgInfo.dimensions)},${imgInfo.width},${imgInfo.height}, ${Utils.getCsvString(imgInfo.hash)}`, {onNewLine: true});
 
               //prepare result: add status + updated_path + action_detail
               _result[e_key] = { ...emap[e_key], status: 'ok', op: "saveImage", updated_path: e_img_file_path, action_detail: `image up to date` };
@@ -1101,7 +1101,7 @@ async function updateImages(stepId, input) {
               check(imgInfo.dimensions, 'mustExists', 'string');
               check(imgInfo.width, 'defined', 'number');
               check(imgInfo.height, 'defined', 'number');
-              check(imgInfo.hash, 'mustExists', 'array');
+              check(imgInfo.hash, 'mustExists', 'string');
               //add additional image info
               imgInfo.assetUid = asset.uid;
               imgInfo.assetName = asset.name;
@@ -1113,7 +1113,7 @@ async function updateImages(stepId, input) {
               //add to result
               result.imgInfo = imgInfo;
               //append image info
-              Utils.appendFile(e_images_info_file_path, `${Utils.getCsvString(imgInfo.assetUid)},${Utils.getCsvString(imgInfo.assetName)},${imgInfo.recordId},${Utils.getCsvString(imgInfo.name)},${imgInfo.size},${Utils.getCsvString(imgInfo.sizeMB)},${Utils.getCsvString(imgInfo.type)},${Utils.getCsvString(imgInfo.dimensions)},${imgInfo.width},${imgInfo.height}, ${Utils.getCsvString(JSON.stringify(imgInfo.hash))}`, {onNewLine: true});
+              Utils.appendFile(e_images_info_file_path, `${Utils.getCsvString(imgInfo.assetUid)},${Utils.getCsvString(imgInfo.assetName)},${imgInfo.recordId},${Utils.getCsvString(imgInfo.name)},${imgInfo.size},${Utils.getCsvString(imgInfo.sizeMB)},${Utils.getCsvString(imgInfo.type)},${Utils.getCsvString(imgInfo.dimensions)},${imgInfo.width},${imgInfo.height}, ${Utils.getCsvString(imgInfo.hash)}`, {onNewLine: true});
               
               //prepare attachment map
               e_attachment_map_o.saveTimestamp = Utils.getCurrentTimestamp();

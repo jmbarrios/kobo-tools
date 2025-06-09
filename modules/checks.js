@@ -92,6 +92,8 @@ export function isOfType(arg, type) {
     case 'object':
     case 'function':
       return typeof arg === type;
+    case 'buffer':
+      return Buffer.isBuffer(arg);
     default:
       throw new Error(`unknown @type: ${type}`);
   }
